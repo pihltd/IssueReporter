@@ -1,0 +1,21 @@
+excelfile: 'C:\Users\pihltd\Documents\github\ImpactReport\docs\GenderSurvey.xlsx'
+workbooklist:
+  - "CDS"
+  - "IDC"
+  - "ICDC"
+  - "PopSci"
+  - "CTDC"
+  - "PDC"
+  - "DataTeam"
+  - "SBG-CGC"
+  - "ISB-CGC"
+  - "Misc"
+wordfile: 'C:\Users\pihltd\Documents\github\ImpactReport\docs\GenderSurveyReport.docx'
+report_title: 'Analysis of CRDC for "gender" with recommendations'
+#Width in inches
+descwidth: 4.5
+recwidth: 2.5
+#Colors in hex
+headercolor: '820df5'
+sectioncolor: '7af50d'
+linecolor: 'f50dee'
