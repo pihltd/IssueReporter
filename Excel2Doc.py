@@ -33,10 +33,6 @@ def setColumnWidth(column, width):
 def main(args):
     configs = crdclib.readYAML(args.configfile)
         
-    #bluefill = '089ece'
-    #greyfill = '989d9e'
-    #lightgrey = 'e3e4e4'
-    
     #Create the document
     report = docx.Document()
     #Set font 
@@ -49,15 +45,19 @@ def main(args):
     report.add_heading(configs['report_title'], 2)
     
     #Set up the table
-    table = report.add_table(rows=1, cols=2)
+    table = report.add_table(rows=1, cols=len(configs['table_headers']))
     table.style = 'Table Grid'
     
     #Create the header rows and content
     hdr_cells = table.rows[0].cells
-    hdr_cells[0].paragraphs[0].add_run('Description').bold=True
-    hdr_cells[1].paragraphs[0].add_run('Recommendation').bold=True
-    setCellBackground(hdr_cells[0], configs['headercolor'])
-    setCellBackground(hdr_cells[1], configs['headercolor'])
+  
+    for i, header in enumerate(configs['table_headers']):
+        hdr_cells[i].paragraphs[0].add_run(header).bold=True
+        i = i+1
+    j=0
+    while j < len(configs['table_headers']):
+       setCellBackground(hdr_cells[j], configs['headercolor'])
+       j += 1
     
     # Put the header on every page
     table_header = OxmlElement('w:tblHeader')
@@ -86,33 +86,35 @@ def main(args):
         #Iterate through the dataframe and populate the rows
         for index, row in excel_df.iterrows():
             cells = table.add_row().cells
-            desc = row['Page Description']
-            url = row['Page URL']
-            imp = row['Impacted Text']
-            rec = row['Action to be taken']
-            if rec == 0:
-                rec = ''
-            desc_cell = cells[0]
-            desc_cell.paragraphs[0].add_run('Page Description: ').bold=True
-            desc_cell.paragraphs[0].add_run(f"{desc}\n")
-            desc_cell.paragraphs[0].add_run('Page URL/Reference: ').bold=True
-            desc_cell.paragraphs[0].add_run(f"{url}\n")
-            desc_cell.paragraphs[0].add_run('Impacted Text: ').bold=True
-            desc_cell.paragraphs[0].add_run(f"{imp}")
-            cells[1].paragraphs[0].add_run(f"{rec}")
-            # Alternate light grey lines in the table
+            for entry in configs['content']:
+                for cellindex, contentlist in entry.items():
+                    for content in contentlist:
+                        for exlabel, tablelabel in content.items():
+                            textcontent = row[exlabel]
+                            if textcontent == 0:
+                                textcontent = ''
+                            if tablelabel == 'None':
+                                cells[cellindex].paragraphs[0].add_run(textcontent)
+                                if linefill:
+                                    setCellBackground(cells[cellindex], configs['linecolor'])
+                            else:
+                                workingcell = cells[cellindex]
+                                workingcell.paragraphs[0].add_run(tablelabel).bold=True
+                                workingcell.paragraphs[0].add_run(f"{row[exlabel]}\n")
+                                if linefill:
+                                    setCellBackground(workingcell, configs['linecolor'])
             if linefill:
-                setCellBackground(desc_cell, configs['linecolor'])
-                setCellBackground(cells[1], configs['linecolor'])
                 linefill = False
             else:
                 linefill = True
 
+
     # With everything done, set the column widths
     table.autofit = False
     table.allow_autofit = False
-    setColumnWidth(table.columns[0], docx.shared.Inches(configs['descwidth']))
-    setColumnWidth(table.columns[1], docx.shared.Inches(configs['recwidth']))
+    for entry in configs['colwidths']:
+        for colindex, colwidth in entry.items():
+            setColumnWidth(table.columns[colindex], docx.shared.Inches(colwidth))
     
     #Save the file
     report.save(configs['wordfile'])

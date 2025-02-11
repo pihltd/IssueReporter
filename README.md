@@ -14,9 +14,11 @@ python Excel2Doc.py -c configfile.yml
 
 **report_title**: The title of the report
 
-**descwidth**: The width in inches of the Description column in the report
+**table_headers**: A list of the text that should be the header for each column
 
-**recwidth**: The width in inches of the Recommendations column in the report
+**content**: This is a bit complex - {cellindex:{[Excel column header: Table labels]}.  If the table label is None, the content is added to the cell as-is}
+
+**colwidths**: A list of the column index and the widths in inches.  {column_index:width_inches}
 
 **headercolor**: The cell shading color in hex for the column headers
 

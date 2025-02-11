@@ -1,4 +1,4 @@
-excelfile: 'C:\Users\pihltd\Documents\github\ImpactReport\docs\GenderSurvey.xlsx'
+excelfile: 'C:\Users\pihltd\Documents\reporting\docs\GenderSurvey.xlsx'
 workbooklist:
   - "CDS"
   - "IDC"
@@ -10,10 +10,25 @@ workbooklist:
   - "SBG-CGC"
   - "ISB-CGC"
   - "Misc"
-wordfile: 'C:\Users\pihltd\Documents\github\ImpactReport\docs\GenderSurveyReport.docx'
+wordfile: 'C:\Users\pihltd\Documents\reporting\docs\GenderSurveyReport.docx'
 report_title: 'Analysis of CRDC for "gender" with recommendations'
-descwidth: 4.5
-recwidth: 2.5
+table_headers:
+  - "Description"
+  - "Recommendation"
+# The content section describes what should go where.  Lists allow for aggregation of Excel columns
+# into a single table column.  Format: Table column index: list of excel columns: Table labels
+content:
+  - 0:
+    - 'Page Description': 'Page Description: '
+    - 'Page URL': 'Page URL/Reference: '
+    - 'Impacted Text': 'Impacted Text: '
+  - 1:
+    - 'Action to be taken': 'None'
+# column widts are index: width in inches
+colwidths:
+  - 0: 4.5
+  - 1: 2.5
+#Colors for shading.  Use hex values for color
 headercolor: '989d9e'
 sectioncolor: '089ece'
 linecolor: 'e3e4e4'
